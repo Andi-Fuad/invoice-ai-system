@@ -6,7 +6,7 @@ An intelligent invoice processing system powered by **Gemini 3.0 Flash** that au
 
 - **AI-Powered OCR**: Uses Google's Gemini Flash multimodal LLM for accurate data extraction
 - **Smart Caching**: Hash-based duplicate detection to save API costs and improve performance
-- **Report Generation**: Automated monthly/yearly PDF reports with statistics
+- **Report Generation**: Automated monthly/yearly PDF reports
 - **Database Storage**: SQLite for persistent data storage
 - **RESTful API**: FastAPI with automatic interactive documentation
 - **Multi-Format Support**: Handles PNG, JPEG, and WEBP files
@@ -211,6 +211,7 @@ Generate professional PDF reports containing:
 For questions or support, please open an issue or contact [afuadahsan@gmail.com](mailto:afuadahsan@gmail.com)
 
 ---
+
 
 
 
