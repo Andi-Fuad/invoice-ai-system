@@ -11,7 +11,7 @@ An intelligent invoice processing system powered by **Gemini Flash 3.0 API** tha
 - **RESTful API**: FastAPI with automatic interactive documentation
 - **Multi-Format Support**: Handles PNG, JPEG, WEBP, and PDF files
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 Upload Invoice → Calculate Hash → Check Cache
@@ -32,7 +32,7 @@ Upload Invoice → Calculate Hash → Check Cache
 - SQLite for development
 - Google Gemini API Key ([Get one here](https://makersuite.google.com/app/apikey))
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Clone the Repository
 
@@ -72,7 +72,7 @@ Open your browser and go to:
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
 
-## 📖 API Endpoints
+## API Endpoints
 
 ### Upload Invoice
 ```http
@@ -213,4 +213,5 @@ Generate professional PDF reports containing:
 For questions or support, please open an issue or contact [your.email@example.com](mailto:afuadahsan@gmail.com)
 
 ---
+
 
