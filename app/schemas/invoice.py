@@ -10,7 +10,7 @@ class InvoiceDetail(BaseModel):
     discount: float
 
 class InvoiceCreate(BaseModel):
-    vendor_name: str
+    store_name: str
     invoice_date: date
     total: float
     details: List[InvoiceDetail]

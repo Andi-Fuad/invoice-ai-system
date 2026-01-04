@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime
 from sqlalchemy.orm import Session
 from app.models.invoice import Invoice
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
@@ -13,34 +13,19 @@ from app.config import settings
 class ReportService:
     @staticmethod
     def generate_report(db: Session, start_date, end_date, report_type: str) -> str:
-        """Generate PDF report for specified date range"""
+        """Generate PDF report with grouped invoice structure"""
         # Query invoices
         invoices = db.query(Invoice).filter(
             Invoice.invoice_date >= start_date,
             Invoice.invoice_date <= end_date
-        ).all()
-        
-        # Create DataFrame
-        data = []
-        for inv in invoices:
-            for detail in inv.details:
-                data.append({
-                    'Date': inv.invoice_date,
-                    'Vendor': inv.vendor_name,
-                    'Product': detail['product_name'],
-                    'Quantity': detail['quantity'],
-                    'Unit': detail['unit'],
-                    'Amount': detail['amount'],
-                    # 'Invoice Total': inv.total
-                })
-        
-        df = pd.DataFrame(data)
+        ).order_by(Invoice.invoice_date.desc()).all()
         
         # Generate PDF
         filename = f"report_{report_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
         filepath = os.path.join(settings.report_dir, filename)
         
-        doc = SimpleDocTemplate(filepath, pagesize=letter)
+        # Use landscape for better table layout
+        doc = SimpleDocTemplate(filepath, pagesize=landscape(letter))
         elements = []
         styles = getSampleStyleSheet()
         
@@ -50,18 +35,18 @@ class ReportService:
         elements.append(Spacer(1, 0.2*inch))
         
         # Summary Statistics
-        if not df.empty:
+        if invoices:
             total_invoices = len(invoices)
-            total_amount = df['Amount'].sum()
-            total_items = len(df)
-            unique_vendors = df['Vendor'].nunique()
+            total_amount = sum(inv.total for inv in invoices)
+            unique_stores = len(set(inv.store_name for inv in invoices))
+            total_items = sum(len(inv.details) for inv in invoices)
             
             summary_text = f"""
             <b>Period:</b> {start_date} to {end_date}<br/>
             <b>Total Invoices:</b> {total_invoices}<br/>
             <b>Total Items:</b> {total_items}<br/>
-            <b>Unique Vendors:</b> {unique_vendors}<br/>
-            <b>Total Amount:</b> Rp.{total_amount:.2f}
+            <b>Unique Stores:</b> {unique_stores}<br/>
+            <b>Total Amount:</b> Rp.{total_amount:,.2f}
             """
         else:
             summary_text = f"""
@@ -73,28 +58,93 @@ class ReportService:
         elements.append(summary)
         elements.append(Spacer(1, 0.3*inch))
         
-        # Detailed Table
-        if not df.empty:
-            # Format dates and amounts
-            df['Date'] = df['Date'].astype(str)
-            df['Amount'] = df['Amount'].apply(lambda x: f"Rp.{x:.2f}")
-            # df['Invoice Total'] = df['Invoice Total'].apply(lambda x: f"${x:.2f}")
+        # Detailed Table with grouped invoices
+        if invoices:
+            # Create table header
+            table_data = [[
+                'Invoice Date',
+                'Store',
+                'Product',
+                'Qty',
+                'Unit',
+                'Amount',
+                'Discount',
+                'Total'
+            ]]
             
-            table_data = [df.columns.tolist()] + df.values.tolist()
+            # Build table with invoice grouping
+            for invoice in invoices:
+                # First row of invoice (with invoice-level info)
+                first_detail = invoice.details[0]
+                table_data.append([
+                    str(invoice.invoice_date),
+                    invoice.store_name,
+                    first_detail['product_name'],
+                    f"{first_detail['quantity']:.2f}",
+                    first_detail['unit'],
+                    f"Rp.{first_detail['amount']:,.2f}",
+                    f"Rp.{first_detail['discount']:,.2f}",
+                    f"Rp.{invoice.total:,.2f}"
+                ])
+                
+                # Subsequent rows (sub-rows for additional products)
+                for detail in invoice.details[1:]:
+                    table_data.append([
+                        '',  # Empty date (merged cell effect)
+                        '',  # Empty store (merged cell effect)
+                        detail['product_name'],
+                        f"{detail['quantity']:.2f}",
+                        detail['unit'],
+                        f"Rp.{detail['amount']:,.2f}",
+                        f"Rp.{detail['discount']:,.2f}",
+                        ''  # Empty total (only show on first row)
+                    ])
             
-            # Create table with styling
-            t = Table(table_data, repeatRows=1)
-            t.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            # Create table
+            t = Table(table_data, colWidths=[80, 120, 150, 50, 50, 70, 70, 80])
+            
+            # Apply styling
+            style = TableStyle([
+                # Header styling
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c3e50')),
                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
                 ('FONTSIZE', (0, 0), (-1, 0), 10),
                 ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                
+                # Data rows styling
+                ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
                 ('FONTSIZE', (0, 1), (-1, -1), 8),
-            ]))
+                ('ALIGN', (3, 1), (6, -1), 'RIGHT'),  # Right align numbers
+                ('ALIGN', (7, 1), (7, -1), 'RIGHT'),  # Right align total
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                
+                # Grid
+                ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+                ('LINEBELOW', (0, 0), (-1, 0), 2, colors.HexColor('#2c3e50')),
+            ])
+            
+            # Add alternating row colors and invoice grouping
+            row_num = 1
+            for i, invoice in enumerate(invoices):
+                num_details = len(invoice.details)
+                
+                # Alternate background color per invoice group
+                bg_color = colors.HexColor('#f8f9fa') if i % 2 == 0 else colors.white
+                style.add('BACKGROUND', (0, row_num), (-1, row_num + num_details - 1), bg_color)
+                
+                # Add thicker line between invoice groups
+                if row_num > 1:
+                    style.add('LINEABOVE', (0, row_num), (-1, row_num), 1.5, colors.HexColor('#34495e'))
+                
+                # Bold the first row of each invoice
+                style.add('FONTNAME', (0, row_num), (1, row_num), 'Helvetica-Bold')
+                style.add('FONTNAME', (7, row_num), (7, row_num), 'Helvetica-Bold')
+                
+                row_num += num_details
+            
+            t.setStyle(style)
             elements.append(t)
         
         doc.build(elements)

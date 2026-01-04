@@ -72,7 +72,7 @@ async def upload_invoice(
         
         # Save to database
         db_invoice = Invoice(
-            vendor_name=invoice_data['vendor_name'],
+            store_name=invoice_data['store_name'],
             invoice_date=datetime.strptime(invoice_data['invoice_date'], '%Y-%m-%d').date(),
             total=float(invoice_data['total']),
             details=invoice_data['details'],

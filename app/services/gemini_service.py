@@ -28,7 +28,7 @@ class GeminiService:
         Analyze this invoice image and extract the following information in JSON format:
         
         {
-          "vendor_name": "Name of the vendor/supplier",
+          "store_name": "Name of the vendor/store",
           "invoice_date": "Date in YYYY-MM-DD format",
           "total": numeric value of total amount after discounts,
           "details": [
@@ -69,7 +69,7 @@ class GeminiService:
             result = json.loads(text.strip())
             
             # Validate required fields
-            if not all(key in result for key in ['vendor_name', 'invoice_date', 'total', 'details']):
+            if not all(key in result for key in ['store_name', 'invoice_date', 'total', 'details']):
                 raise ValueError("Missing required fields in extracted data")
             
             return result

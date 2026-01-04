@@ -6,7 +6,7 @@ class Invoice(Base):
     __tablename__ = "invoices"
     
     id = Column(Integer, primary_key=True, index=True)
-    vendor_name = Column(String, index=True)
+    store_name = Column(String, index=True)
     invoice_date = Column(Date)
     total = Column(Float)
     details = Column(JSON) 
