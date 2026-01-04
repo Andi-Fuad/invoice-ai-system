@@ -53,7 +53,7 @@ Upload Invoice → Calculate Hash → Check Cache
                          ↓                         ↓
                     Found in Cache?           New Invoice?
                          ↓                         ↓
-                  Return Cached Data       Gemini Vision API
+                  Return Cached Data       Gemini Flash API
                   (Instant, Free)          (Extract Data)
                          ↓                         ↓
                     Response  ←──────────────  Save to DB
@@ -211,6 +211,7 @@ Generate professional PDF reports containing:
 For questions or support, please open an issue or contact [afuadahsan@gmail.com](mailto:afuadahsan@gmail.com)
 
 ---
+
 
 
 
