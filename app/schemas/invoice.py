@@ -5,7 +5,9 @@ from typing import List, Optional
 class InvoiceDetail(BaseModel):
     product_name: str
     quantity: float
+    unit: str
     amount: float
+    discount: float
 
 class InvoiceCreate(BaseModel):
     vendor_name: str
@@ -16,7 +18,9 @@ class InvoiceCreate(BaseModel):
 class InvoiceResponse(InvoiceCreate):
     id: int
     file_path: str
-    
+    file_hash: str
+    is_cached: Optional[bool] = False  # Indicates if data was from cache
+
     class Config:
         from_attributes = True
 

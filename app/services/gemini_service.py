@@ -30,12 +30,14 @@ class GeminiService:
         {
           "vendor_name": "Name of the vendor/supplier",
           "invoice_date": "Date in YYYY-MM-DD format",
-          "total": numeric value of total amount,
+          "total": numeric value of total amount after discounts,
           "details": [
             {
               "product_name": "Name of product/service",
               "quantity": numeric quantity,
-              "amount": numeric amount for this item
+              "unit": "unit of measurement (liter, pcs, box)",
+              "amount": numeric amount for this item before discount,
+              "discount": numeric discount for the product
             }
           ]
         }
@@ -43,7 +45,9 @@ class GeminiService:
         Important:
         - Return ONLY valid JSON, no markdown code blocks or additional text
         - Ensure all numeric values are numbers, not strings
-        - If you can't find a field, use null for that field
+        - If the quantity written in string, extract only the numerical value from the string.
+        - If the unit of measurement is missing, use the most likely unit for the product, such as grams for fruit products, or use 'pcs' as the default.
+        - If you can't find a field, use null for that field or 0 if the field required numerical value
         - Extract ALL line items from the invoice into the details array
         """
         

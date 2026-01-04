@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
-from app.routers import invoice
+from app.routers import invoice, report
 import os
 from app.config import settings
 
@@ -29,7 +29,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(invoice.router)
-# app.include_router(report.router)
+app.include_router(report.router)
 
 @app.get("/")
 def root():
@@ -50,4 +50,4 @@ def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="localhost", port=8000)
