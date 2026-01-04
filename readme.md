@@ -9,7 +9,7 @@ An intelligent invoice processing system powered by **Gemini 3.0 Flash** that au
 - **Report Generation**: Automated monthly/yearly PDF reports with statistics
 - **Database Storage**: SQLite for persistent data storage
 - **RESTful API**: FastAPI with automatic interactive documentation
-- **Multi-Format Support**: Handles PNG, JPEG, WEBP, and PDF files
+- **Multi-Format Support**: Handles PNG, JPEG, and WEBP files
 
 ## Project Structure
 
@@ -41,8 +41,6 @@ invoice-processor/
 ├── reports/                       # Generated PDF reports
 ├── requirements.txt
 ├── .env
-├── Dockerfile
-├── docker-compose.yml
 └── README.md
 ```
 
@@ -213,6 +211,7 @@ Generate professional PDF reports containing:
 For questions or support, please open an issue or contact [afuadahsan@gmail.com](mailto:afuadahsan@gmail.com)
 
 ---
+
 
 
 
