@@ -11,6 +11,41 @@ An intelligent invoice processing system powered by **Gemini Flash 3.0 API** tha
 - **RESTful API**: FastAPI with automatic interactive documentation
 - **Multi-Format Support**: Handles PNG, JPEG, WEBP, and PDF files
 
+## Project Structure
+
+```
+invoice-processor/
+├── app/
+│   ├── __init__.py
+│   ├── main.py                    # FastAPI application entry point
+│   ├── config.py                  # Configuration and environment variables
+│   ├── database.py                # Database connection and session
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── invoice.py            # SQLAlchemy models
+│   ├── schemas/
+│   │   ├── __init__.py
+│   │   └── invoice.py            # Pydantic schemas for validation
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── gemini_service.py     # Gemini Vision API integration
+│   │   └── report_service.py     # PDF report generation
+│   ├── routers/
+│   │   ├── __init__.py
+│   │   ├── invoice.py            # Invoice endpoints
+│   │   └── report.py             # Report endpoints
+│   └── utils/
+│       ├── __init__.py
+│       └── file_handler.py       # File processing and hashing
+├── uploads/                       # Uploaded invoice files
+├── reports/                       # Generated PDF reports
+├── requirements.txt
+├── .env
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
+
 ## Architecture
 
 ```
@@ -138,41 +173,6 @@ Content-Type: application/json
 Response: PDF file download
 ```
 
-## Project Structure
-
-```
-invoice-processor/
-├── app/
-│   ├── __init__.py
-│   ├── main.py                    # FastAPI application entry point
-│   ├── config.py                  # Configuration and environment variables
-│   ├── database.py                # Database connection and session
-│   ├── models/
-│   │   ├── __init__.py
-│   │   └── invoice.py            # SQLAlchemy models
-│   ├── schemas/
-│   │   ├── __init__.py
-│   │   └── invoice.py            # Pydantic schemas for validation
-│   ├── services/
-│   │   ├── __init__.py
-│   │   ├── gemini_service.py     # Gemini Vision API integration
-│   │   └── report_service.py     # PDF report generation
-│   ├── routers/
-│   │   ├── __init__.py
-│   │   ├── invoice.py            # Invoice endpoints
-│   │   └── report.py             # Report endpoints
-│   └── utils/
-│       ├── __init__.py
-│       └── file_handler.py       # File processing and hashing
-├── uploads/                       # Uploaded invoice files
-├── reports/                       # Generated PDF reports
-├── requirements.txt
-├── .env
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
-```
-
 ## Usage Examples
 
 ### Extracting Invoice Data
@@ -210,8 +210,9 @@ Generate professional PDF reports containing:
 - LinkedIn: [A Fuad Ahsan Basir](https://linkedin.com/in/afuadahsan/)
 - Portfolio: [fuad.framer.website](https://fuad.framer.website/)
 
-For questions or support, please open an issue or contact [your.email@example.com](mailto:afuadahsan@gmail.com)
+For questions or support, please open an issue or contact [afuadahsan@gmail.com](mailto:afuadahsan@gmail.com)
 
 ---
+
 
 
