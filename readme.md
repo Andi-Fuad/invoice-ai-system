@@ -1,13 +1,13 @@
-# Invoice Processing API
+# Invoice Processing AI System
 
-An intelligent invoice processing system powered by **Gemini Flash 3.0 API** that automatically extracts structured data from invoice images and generates comprehensive reports.
+An intelligent invoice processing system powered by **Gemini 3.0 Flash** that automatically extracts structured data from invoice images and generates comprehensive reports.
 
 ## Features
 
 - **AI-Powered OCR**: Uses Google's Gemini Flash multimodal LLM for accurate data extraction
 - **Smart Caching**: Hash-based duplicate detection to save API costs and improve performance
 - **Report Generation**: Automated monthly/yearly PDF reports with statistics
-- **Database Storage**: PostgreSQL/SQLite for persistent data storage
+- **Database Storage**: SQLite for persistent data storage
 - **RESTful API**: FastAPI with automatic interactive documentation
 - **Multi-Format Support**: Handles PNG, JPEG, WEBP, and PDF files
 
@@ -213,6 +213,7 @@ Generate professional PDF reports containing:
 For questions or support, please open an issue or contact [afuadahsan@gmail.com](mailto:afuadahsan@gmail.com)
 
 ---
+
 
 
 
