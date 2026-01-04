@@ -207,9 +207,10 @@ Generate professional PDF reports containing:
 ## Author
 
 **Your Name**
-- LinkedIn: [Your Name](https://linkedin.com/in/afuadahsan/)
-- Portfolio: [yourwebsite.com](https://fuad.framer.website/)
+- LinkedIn: [A Fuad Ahsan Basir](https://linkedin.com/in/afuadahsan/)
+- Portfolio: [fuad.framer.website](https://fuad.framer.website/)
 
 For questions or support, please open an issue or contact [your.email@example.com](mailto:afuadahsan@gmail.com)
 
 ---
+
