@@ -1,4 +1,5 @@
 from google import genai
+from google.genai import types
 from app.config import settings
 import json
 from PIL import Image
@@ -7,7 +8,7 @@ import io
 class GeminiService:
     def __init__(self):
         self.client = genai.Client(api_key=settings.gemini_api_key)
-        self.model = settings.gemini_flash_3
+        self.model_name = settings.gemini_flash_3
     
     def extract_invoice_data(self, image_bytes: bytes, mime_type: str) -> dict:
         """
@@ -53,20 +54,14 @@ class GeminiService:
         
         try:
             # Generate content with image
-            response = self.model.generate_content([prompt, image])
-            
-            # Parse the response
-            text = response.text.strip()
-            
-            # Remove markdown code blocks if present
-            if text.startswith("```json"):
-                text = text[7:]
-            if text.startswith("```"):
-                text = text[3:]
-            if text.endswith("```"):
-                text = text[:-3]
-            
-            result = json.loads(text.strip())
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=[prompt, image],
+                config=types.GenerateContentConfig(
+                    response_mime_type='application/json' # Forces JSON output
+                )
+            )
+            result = json.loads(response.text)
             
             # Validate required fields
             if not all(key in result for key in ['store_name', 'invoice_date', 'total', 'details']):
