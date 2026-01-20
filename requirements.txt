@@ -5,8 +5,9 @@ psycopg2-binary
 python-multipart
 pillow
 pandas
-google-generativeai
+google-genai
 python-dotenv
 reportlab
 matplotlib
 imagehash
+pydantic-settings

@@ -1,4 +1,4 @@
-import google.generativeai as genai
+from google import genai
 from app.config import settings
 import json
 from PIL import Image
@@ -6,8 +6,8 @@ import io
 
 class GeminiService:
     def __init__(self):
-        genai.configure(api_key=settings.gemini_api_key)
-        self.model = genai.GenerativeModel(settings.gemini_flash_3)
+        self.client = genai.Client(api_key=settings.gemini_api_key)
+        self.model = settings.gemini_flash_3
     
     def extract_invoice_data(self, image_bytes: bytes, mime_type: str) -> dict:
         """
